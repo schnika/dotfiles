@@ -1,121 +1,67 @@
-call plug#begin('~/.dotfiles/nvim/plugged')
+""" Dependencies
 
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'junegunn/fzf.vim'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-unimpaired'
-Plug 'tpope/vim-sensible'
-Plug 'ntpeters/vim-better-whitespace'
-Plug 'Yggdroot/indentLine'
+source ~/.dotfiles/nvim/plugins.vim
+source ~/.dotfiles/nvim/keymaps.vim
 
-call plug#end()
+""" Colors
 
-" Spaces & Tabs {{{
+" Disable Background Color Erase (BCE) so that color schemes render properly when inside 256-color tmux and GNU screen.
+" See also http://snk.tuxfamily.org/log/vim-256color-bce.html
+if &term =~ '256color'
+    set t_ut=
+endif
+
+" Use 24-bit (true-color) mode in Vim/Neovim when outside tmux (this is for the OneDark colorscheme)
+if (has("nvim"))
+    let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+if (has("termguicolors"))
+    set termguicolors
+endif
+
+""" General
+
+set hidden " Allow for current buffer to be backgrounded
+set number " Show current line number on the side bar
+set noshowmode " Disable the mode status at the bottom
+set showcmd " Show last command executed at the bottom of screen
+set scrolloff=2 " Keep 2 screen lines above/below the cursor if possible
+set ignorecase " Ignore case when searching ...
+set smartcase " ... unless search pattern contains upper case characters
+set smartindent " Smart autoindenting when starting a new line
+set nowrap " Don't wrap lines
+set linebreak " Wrap long lines; don't break words
+set colorcolumn=121 " Highlight the 81st column
+set mouse-=a " Disable mouse click to go to position
+set autoread " Detect when a file is changed
+set list lcs=tab:\ \ " When cursor is on a tab char, go to beginning of tab, not end (Note: the space after the second \ is important)
+set splitbelow " Open files below the current window when doing a horizontal split
+set splitright " Open files to the right of the current window when doing a vertical split
+set hlsearch " Highlight search results
+set noswapfile " Don't make swap files
+set formatoptions=croqlj " Format options that are good for Google style. See :help fo-table
+set backspace=indent,eol,start " Allow backspacing through autoindents, line-endings, and backwards through the start of an insertion
+set wildmenu " Show graphical list of suggestions that you can cycle through when you hit <TAB> while typing a command
+set incsearch " Search as characters are entered
+
+""" Spaces & Tabs
+
 set tabstop=2       " number of visual spaces per TAB
 set softtabstop=2   " number of spaces in tab when editing
 set shiftwidth=2    " number of spaces to use for autoindent
 set expandtab       " tabs are space
 set autoindent
 set copyindent      " copy indent from the previous line
-" }}} Spaces & Tabs
 
-" Clipboard {{{
+""" Clipboard
+
 set clipboard+=unnamedplus
-" }}} Clipboard
 
-" UI Config {{{
-set hidden
-set number                   " show line number
-set showcmd                  " show command in bottom bar
-set wildmenu                 " visual autocomplete for command menu
-set showmatch                " highlight matching brace
-set laststatus=2             " window will always have a status line
-set nobackup
-set noswapfile
-let colorcolumn="120,".join(range(119,120),",")
-" }}} UI Config
+""" Auto Commands
 
-" Leader & Mappings {{{
-let mapleader=" "   " leader is space
+autocmd insertenter * :setlocal nohlsearch " Toggle hl off when entering insert mode
+autocmd insertleave * :setlocal hlsearch " Toggle hl back on when leaving insert mode
+autocmd bufnewfile,bufenter * silent! lcd %:p:h " Automatically change the working path to the path of the current file
 
-" edit/reload vimrc
-nmap <leader>ev :e $MYVIMRC<CR>
-nmap <leader>sv :so $MYVIMRC<CR>
-
-" better ESC
-inoremap jj <esc>
-
-" fast save and close
-nmap <leader>w :w<CR>
-nmap <leader>x :x<CR>
-nmap <leader>q :q<CR>
-
-nnoremap <leader>n :NERDTreeToggle<CR>
-nnoremap <leader>f :NERDTreeFind<CR>
-
-" }}}
-" ============================================================================
-" FZF {{{
-" ============================================================================
-
-if has('nvim') || has('gui_running')
-  let $FZF_DEFAULT_OPTS .= ' --inline-info'
-endif
-
-" Hide statusline of terminal buffer
-autocmd! FileType fzf
-autocmd  FileType fzf set laststatus=0 noshowmode noruler
-  \| autocmd BufLeave <buffer> set laststatus=2 showmode ruler
-
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-
-command! -bang -nargs=? -complete=dir Files
-  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
-nnoremap <silent> <Leader>t :Files<CR>
-nnoremap <silent> <Leader>C        :Colors<CR>
-nnoremap <silent> <Leader><Enter>  :Buffers<CR>
-nnoremap <silent> <Leader>L        :Lines<CR>
-nnoremap <silent> <Leader>ag       :Ag <C-R><C-W><CR>
-nnoremap <silent> <Leader>AG       :Ag <C-R><C-A><CR>
-xnoremap <silent> <Leader>ag       y:Ag <C-R>"<CR>
-nnoremap <silent> <Leader>`        :Marks<CR>
-
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
-
-function! s:plug_help_sink(line)
-  let dir = g:plugs[a:line].dir
-  for pat in ['doc/*.txt', 'README.md']
-    let match = get(split(globpath(dir, pat), "\n"), 0, '')
-    if len(match)
-      execute 'tabedit' match
-      return
-    endif
-  endfor
-  tabnew
-  execute 'Explore' dir
-endfunction
-
-command! PlugHelp call fzf#run(fzf#wrap({
-  \ 'source': sort(keys(g:plugs)),
-  \ 'sink': function('s:plug_help_sink')}))
-
-let g:better_whitespace_enabled=1
-let g:strip_whitespace_on_save=1
+filetype plugin indent on " Enable file type based indenting and syntax highlighting (Note: needs to be at the end)
+syntax on
