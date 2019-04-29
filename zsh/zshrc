@@ -200,4 +200,5 @@ case $(basename "$(cat "/proc/$PPID/comm")") in
     ;;
 esac
 
-export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
+source '/usr/share/fzf/key-bindings.zsh'
+source '/usr/share/fzf/completion.zsh'

@@ -41,7 +41,6 @@ set hlsearch " Highlight search results
 set noswapfile " Don't make swap files
 set formatoptions=croqlj " Format options that are good for Google style. See :help fo-table
 set backspace=indent,eol,start " Allow backspacing through autoindents, line-endings, and backwards through the start of an insertion
-set wildmenu " Show graphical list of suggestions that you can cycle through when you hit <TAB> while typing a command
 set incsearch " Search as characters are entered
 
 """ Spaces & Tabs
@@ -61,7 +60,6 @@ set clipboard+=unnamedplus
 
 autocmd insertenter * :setlocal nohlsearch " Toggle hl off when entering insert mode
 autocmd insertleave * :setlocal hlsearch " Toggle hl back on when leaving insert mode
-autocmd bufnewfile,bufenter * silent! lcd %:p:h " Automatically change the working path to the path of the current file
 
 filetype plugin indent on " Enable file type based indenting and syntax highlighting (Note: needs to be at the end)
 syntax on
