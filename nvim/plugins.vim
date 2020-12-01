@@ -25,6 +25,7 @@ Plug 'tpope/vim-unimpaired'
 Plug 'tpope/vim-sensible'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'Yggdroot/indentLine'
+Plug 'posva/vim-vue'
 
 call plug#end()
 " }}}

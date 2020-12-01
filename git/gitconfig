@@ -1,3 +1,7 @@
 [user]
 	email = patrick.schnetger@gmail.com
 	name = Patrick Schnetger
+[commit]
+	gpgsign = false
+[gpg]
+	program = gpg2
